@@ -9,7 +9,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # remove caching
 
 # SQL Helper
 # SQL Helper
-SQLHelper = SQLHelper()
+sql_helper = SQLHelper()
 
 
 #################################################
@@ -43,7 +43,7 @@ def works_cited():
 @app.route("/api/v1.0/linedata/")
 def linedata():
     # Execute queries
-    df = SQLHelper.querylineData()
+    df = sql_helper.query_line_data()
     # Turn DataFrame into List of Dictionary
     data = df.to_dict(orient="records")
     return jsonify(data)
@@ -51,18 +51,27 @@ def linedata():
 @app.route("/api/v1.0/bar_data/")
 def bar_data():
     # Execute Query
-    df = SQLHelper.query_bar_data()
+    df1 = sql_helper.query_bar_data()
     # Turn DataFrame into List of Dictionary
-    data = df.to_dict(orient="records")
+    data = df1.to_dict(orient="records")
     return jsonify(data)
 
 @app.route("/api/v1.0/pie_data/")
 def pie_data():
     # Execute Query
-    df = SQLHelper.query_pie_data()
+    df = sql_helper.query_pie_data()
     # Turn DataFrame into List of Dictionary
     data = df.to_dict(orient="records")
     return jsonify(data)
+
+@app.route("/api/v1.0/map_data/")
+def map_data():
+    # Execute Query
+    df = sql_helper.query_map_data()
+    # Turn DataFrame into List of Dictionary
+    data = df.to_dict(orient="records")
+    return jsonify(data)
+
 
 #################################################
 # ELIMINATE CACHING
