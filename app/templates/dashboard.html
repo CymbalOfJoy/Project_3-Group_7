@@ -52,12 +52,12 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <label class="col-form-label mt-4" for="min-year">Min Year</label>
-                <input class="form-control" id="min-year" name="min-year" type="number" value="1950" min="1950">
-                <button type="button" class="btn btn-primary" id="filter-btn">Filter!</button>
+                <label class="col-form-label mt-4" for="Name of European Country">Country_Visited</label>
+                <input class="form-control" id="countryInput" name="Country" type="text" placeholder="Enter Country Name">
+                <button type="button" class="btn btn-primary mt-2" id="filter-btn">Filter!</button>
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-4">
             <!-- BAR -->
             <div class="container">
               <h1 class="my-4">Comparison of Total Travel Cost by Main Purpose</h1>
@@ -65,15 +65,73 @@
                   <div class="card-body">
                       <img src="{{ url_for('static', filename='images/travel_cost_chart.png') }}" alt="Bar Chart" class="img-fluid">
                   </div>
+                  <div class="col-md-6">
+                    <!-- Table -->
+                    <table id="table_data" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Country_Visited</th>
+                                <th>Travel Duration Days</th>
+                                <th>Number of Companions</th>
+                                <th>Accomodation Type</th>
+                                <th>Main Purpose</th>
+                                <th>Season of Visit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                  <!--BUBBLE-->
+                  <div class="container">
+                    <div class="chart-container">
+                        <img src="static/images/bubble_chart.png" alt="Bubble Chart">
+                    </div>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
+                <!-- Pie Chart -->
+                <div class="container mt-4">
+                  <h2>Distribution of Countries Visited</h2>
+                  <div class="card">
+                      <div class="card-body">
+                          <img src="{{ url_for('static', filename='images/pie_chart.png') }}" alt="Pie Chart" class="img-fluid">
+                      </div>
+                  </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="static/js/app.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#filter-btn').click(function() {
+                var country = $('#countryInput').val();
+                $.ajax({
+                    url: "/api/v1.0/filter_data",
+                    type: "GET",
+                    data: { country: country },
+                    success: function(data) {
+                        var table = $('#table_data').DataTable();
+                        table.clear();
+                        data.forEach(function(row) {
+                            table.row.add([
+                                row.Country_Visited,
+                                row.Travel_Duration_Days,
+                                row.Number_of_Companions,
+                                row.Accommodation_Type,
+                                row.Main_Purpose,
+                                row.Season_of_Visit
+                            ]).draw();
+                        });
+                    }
+                });
+            });
+
+            $('#table_data').DataTable();
+        });
+    </script>
 </body>
 
 </html>
