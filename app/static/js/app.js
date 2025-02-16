@@ -9,11 +9,11 @@
 // Loop through an array of grades and build the entire table body from scratch
 
 // Use D3 to select the table
-let table = d3.select("#earthquake_table");
+let table = d3.select("#table_data");
 let tbody = table.select("tbody");
 
 // Make Table Interactive
-let dt_table = new DataTable('#earthquake_table');
+let dt_table = new DataTable('#table_data');
 
 // Event Listener
 d3.select("#filter-btn").on("click", function () {
@@ -28,9 +28,9 @@ function doWork() {
   // Fetch the JSON data and console log it
 
   // get value
-  let min_year = d3.select("#min-year").property("value"); // user input
-  let url1 = `/api/v1.0/bar_data/${min_year}`;
-  let url2 = `/api/v1.0/table_data/${min_year}`
+  let Country_Visited = d3.select("#Country_Visited").property("value"); // user input
+  let url1 = `/api/v1.0/bar_data/${Country_Visited}`;
+  let url2 = `/api/v1.0/table_data/${Coun}`
 
   // Make Request
   d3.json(url1).then(function (data) {
@@ -58,16 +58,15 @@ function makeTable(data) {
     let table_row = tbody.append("tr");
 
     // Append Cells
-    table_row.append("td").text(row.year);
-    table_row.append("td").text(row.magnitude);
-    table_row.append("td").text(row.source);
-    table_row.append("td").text(row.type);
-    table_row.append("td").text(row.latitude);
-    table_row.append("td").text(row.longitude);
+    table_row.append("td").text(row.Country_Visited);
+    table_row.append("td").text(row.Travel_Duration_Days);
+    table_row.append("td").text(row.Number_of_Companions);
+    table_row.append("td").text(row.Latitude);
+    table_row.append("td").text(row.Longitude);
   }
 
   // Make Table Interactive (again)
-  dt_table = new DataTable('#earthquake_table', {
+  dt_table = new DataTable('#table_data', {
     order: [[0, 'desc']] // Sort by column 1 desc
   });
 }
@@ -76,8 +75,8 @@ function makeTable(data) {
 function makeBarPlot(data) {
   // Create Trace
   let trace = {
-    x: data.map(row => row.year),
-    y: data.map(row => row.num_earthquakes),
+    x: data.map(row => row.Country_Visited),
+    y: data.map(row => row.num_),
     type: 'bar',
     marker: {
       color: 'firebrick'
@@ -90,16 +89,16 @@ function makeBarPlot(data) {
   // Apply a title to the layout
   let layout = {
     title: {
-      text: `Number of Earthquakes by Year`
+      text: `Comparison of Total Travel Cost by Main Purpose`
     },
     yaxis: {
       title: {
-        text: 'Number of Earthquakes'
+        text: 'Main Purpose'
       }
     },
     xaxis: {
       title: {
-        text: 'Year'
+        text: 'Total Travel Cost'
       }
     },
     height: 600
