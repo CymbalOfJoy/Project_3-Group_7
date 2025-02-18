@@ -1,6 +1,9 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 from flask import Flask, jsonify, render_template, redirect, request
-from SQLHelper import sqlhelper
+from SQLHelper import SQLHelper
 
 
 
@@ -9,7 +12,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # remove caching
 
 # SQL Helper
 # SQL Helper
-sqlHelper = sqlhelper()
+sql_helper = SQLHelper()
 
 
 #################################################
@@ -40,45 +43,77 @@ def works_cited():
 # API Routes
 #################################################
 
-@app.route("/api/v1.0/linedata/")
-def linedata():
+@app.route("/api/v1.0/bubbledata/")
+def bubbledata():
     # Execute queries
-    df = sqlHelper.querylineData()
+    df2 = sql_helper.query_bubble_data()
+    # Turn DataFrame into List of Dictionary
+    data = df2.to_dict(orient="records")
+    return jsonify(data)
+
+@app.route("/api/v1.0/bar_data/")
+def bar_data():
+    # Execute Query
+    df1 = sql_helper.query_bar_data()
+    # Turn DataFrame into List of Dictionary
+    data = df1.to_dict(orient="records")
+    return jsonify(data)
+
+
+
+@app.route("/api/v1.0/table_data")
+def filter_data():
+    country = request.args.get('Country_Visited')
+    if not country:
+        return jsonify([])  # Return an empty list if no country is provided
+    df = sql_helper.query_filtered_data(country)
+    data = df.to_dict(orient="records")
+    return jsonify(data)
+
+
+@app.route("/api/v1.0/pie_data/")
+def pie_data():
+    # Execute Query
+    df = sql_helper.query_pie_data()
+    # Turn DataFrame into List of Dictionary
+    data = df.to_dict(orient="records")
+    
+    # Create a pie chart for the 'Country_Visited' column
+    plt.figure(figsize=(10, 7))
+    df.set_index('Country_Visited')['Count'].plot.pie(autopct='%1.1f%%', startangle=140, cmap='viridis')
+    plt.title('Precentage of Visitors to Each Country')
+    plt.ylabel('')  # This removes the y-label
+    plt.savefig('static/pie_chart.png')
+    
+    # Return the JSON data
+    return jsonify(data)
+plt.tight_layout()
+plt.show()  
+
+@app.route("/api/v1.0/map_data/")
+def map_data():
+    # Execute Query
+    df = sql_helper.query_map_data()
     # Turn DataFrame into List of Dictionary
     data = df.to_dict(orient="records")
     return jsonify(data)
 
-# @app.route("/api/v1.0/table_data/<>")
-# def table_data(min_year):
-#     # Execute Query
-#     df = sqlHelper.queryTableData(min_year)
-#     # Turn DataFrame into List of Dictionary
-#     data = df.to_dict(orient="records")
-#     return jsonify(data)
 
-# @app.route("/api/v1.0/map_data/<min_year>")
-# def map_data(min_year):
-#     # Execute Query
-#     df = sqlHelper.queryMapData(min_year)
-#     # Turn DataFrame into List of Dictionary
-#     data = df.to_dict(orient="records")
-#     return jsonify(data)
+#################################################
+# ELIMINATE CACHING
+#################################################
 
-# #################################################
-# # ELIMINATE CACHING
-# #################################################
-
-# @app.after_request
-# def add_header(r):
-#     """
-#     Add headers to both force latest IE rendering engine or Chrome Frame,
-#     and also to cache the rendered page for 10 minutes.
-#     """
-#     r.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-#     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
-#     r.headers["Pragma"] = "no-cache"
-#     r.headers["Expires"] = "0"
-#     return r
-# #main
-# if __name__ == "__main__":
-#     app.run(debug=True)
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    return r
+#main
+if __name__ == "__main__":
+    app.run(debug=True)
