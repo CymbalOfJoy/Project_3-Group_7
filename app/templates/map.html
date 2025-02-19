@@ -6,13 +6,11 @@
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
     <!-- Leaflet JavaScript code -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <!-- D3 library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -64,13 +62,18 @@
         </div>
       </div>
     </nav>
-    <h1>Earthquake MAP!</h1>
+
+    <h1>Number of People Visiting Cities</h1>
     <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
-              <label class="col-form-label mt-4" for="min-year">Min Year</label>
-              <input class="form-control" id="min-year" name="min-year" type="number" value="1950" min="1950">
-              <button type="button" class="btn btn-primary" id="filter-btn">Filter!</button>
+              <label class="col-form-label mt-4" for="City_Visited">City Visited</label>
+              <!-- Dropdown to select city -->
+              <select class="form-select" id="City_Visited" name="City_Visited">
+                <!-- Cities will be populated here -->
+              </select>
+              <button type="button" class="btn btn-primary mt-2" id="filter-btn">Filter!</button>
+              <button type="button" class="btn btn-secondary mt-2" id="reset-btn">Reset Map</button>
           </div>
         </div>
         <div class="row">
@@ -84,5 +87,29 @@
     <!-- Our JavaScript -->
     <script type="text/javascript" src="static/js/map.js"></script>
 
+    <script>
+      // Populate cities dropdown on page load
+      d3.json('/api/v1.0/map_data/').then(function(data) {
+        const cities = [...new Set(data.map(item => item.City_Visited))]; // Get unique cities
+        const citySelect = d3.select("#City_Visited");
+        cities.forEach(city => {
+          citySelect.append("option").text(city).attr("value", city);
+        });
+      });
+
+      // Reset Map function
+      function resetMap() {
+        // Reset the dropdown to the default state (all cities visible)
+        d3.select("#City_Visited").property("value", "");
+
+        // Call the createMap function without a city filter
+        createMap("");
+      }
+
+      // Event Listener for reset button
+      d3.select("#reset-btn").on("click", function() {
+        resetMap();
+      });
+    </script>
   </body>
 </html>

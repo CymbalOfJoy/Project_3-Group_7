@@ -1,52 +1,102 @@
 from sqlalchemy import create_engine, text
 import pandas as pd
+import numpy as np
+# Plotting
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.graph_objects as go
+
+import os
 
 
-
-
-class sqlhelper():
-
+class SQLHelper:
 
     def __init__(self):
+        os.chdir(os.path.dirname(os.path.realpath(__file__)))       
         self.engine = create_engine("sqlite:///touristtravel.sqlite")
-# Querry 1 for line chart- sorting table by the column Total_Travel_Cost
-    def querylineData(self):
-        # Create our session (link) from Python to the DB
-        conn = self.engine.connect()  # Raw SQL/Pandas
-        # Define Query
-        query = text("""SELECT *
-                        FROM touristtravel
-                        ORDER BY Total_Travel_Cost ASC""")
-        df = pd.read_sql(query, con=conn)
 
-        # Close the connection
-        conn.close()
-        return df
-     
-#Query 2 for Barchart, pull data from table sorting from the accomidation type 
-   def querybarData(self):
-        # Create our session (link) from Python to the DB
-        conn = self.engine.connect()  # Raw SQL/Pandas
-        # Define Query
-        query = text("""SELECT *
-                        FROM touristtravel
-                        ORDER BY """)
-        df = pd.read_sql(query, con=conn)
 
-        # Close the connection
-        conn.close()
-        return 
+    def query_bar_data(self):
+        conn = self.engine.connect()
+        query = text("""SELECT
+                   Main_Purpose,
+                   SUM(Total_Travel_Cost) AS Total_Cost
+                FROM
+                    touristtravel
+                GROUP BY
+                   Main_Purpose
+                ORDER BY
+                   Total_Cost ASC;""")
+       
+        df1 = pd.read_sql(query, con=conn)
+        return df1
 
-#Query 3 for pie/donut chart, pull data from table sorting by the column Reason for Travel 
-   def querypieData(self):
-        # Create our session (link) from Python to the DB
-        conn = self.engine.connect()  # Raw SQL/Pandas
-        # Define Query
-        query = text("""SELECT *
-                        FROM touristtravel
-                        ORDER BY """)
-        df = pd.read_sql(query, con=conn)
+    def query_bubble_data(self):
+        conn = self.engine.connect()
+        query = text("""
+            SELECT
+                Mode_of_Travel,
+                Main_Purpose,
+                COUNT(*) AS Travel_Count
+            FROM
+                touristtravel
+            GROUP BY
+                Mode_of_Travel,
+                Main_Purpose
+            ORDER BY
+                Main_Purpose;
+        """)
+        df2 = pd.read_sql(query, con=conn)
 
-        # Close the connection
-        conn.close()
-        return 
+        df2_sorted = df2.sort_values(by='Travel_Count', ascending=False)
+        return df2_sorted
+    
+    def query_table_data(self, Country_Visited=None):
+        conn= self.engine.connect() 
+        query = """
+            SELECT
+                City_Visited,
+                Country_Visited,
+                Travel_Duration_Days,
+                Number_of_Companions,
+                Accommodation_Type,
+                Main_Purpose,
+                Season_of_Visit
+            FROM
+                touristtravel
+        """
+        if Country_Visited:
+            query += " WHERE Country_Visited = :Country_Visited"
+        query += " ORDER BY Country_Visited;"
+        df3 = pd.read_sql(query, con=conn, params={"Country_Visited": Country_Visited})
+
+        return df3
+
+    def query_pie_data(self):
+        conn = self.engine.connect()
+        query = text("""
+        SELECT
+            City_Visited,
+            Country_Visited,
+            Travel_Duration_Days,
+            Number_of_Companions,
+            Accommodation_Type,
+            Main_Purpose,
+            Season_of_Visit
+        FROM
+            touristtravel
+        ORDER BY
+            Country_Visited;
+        """)
+        df3 = pd.read_sql(query, con=conn)
+        return df3
+    
+    def query_map_data(self):
+        conn = self.engine.connect()
+        query = text("""
+        SELECT City_Visited, lat, long, MIN(Country_Visited) as min_cv, SUM(Number_of_Companions) as sum_nc
+        FROM touristtravel         
+        GROUP BY City_Visited         
+        """)
+        df3 = pd.read_sql(query, con=conn)
+        return df3

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Travel Data</title>
+
+    <!-- JS Imports -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- CSS Imports -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/lumen/bootstrap.min.css">
+    <link href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/map">Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about_us">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/works_cited">Works Cited</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <h1>Travel Data!</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="col-form-label mt-4" for="Country_Visited">Country Visited</label>
+                <!-- Change dropdown to text input for Country -->
+                <input type="text" class="form-control" id="countryInput" placeholder="Enter Country">
+                <button type="button" class="btn btn-primary mt-2" id="filter-btn">Filter!</button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <!-- Table -->
+            <div class="col-md-12">
+                <table id="table_data" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>City Visited</th>
+                            <th>Country Visited</th>
+                            <th>Travel Duration</th>
+                            <th>Accommodation Type</th>
+                            <th>Main Purpose</th>
+                            <th>Season of Visit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h1 class="my-4">Comparison of Total Travel Cost by Main Purpose</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <img src="{{ url_for('static', filename='images/travel_cost_chart.png') }}" alt="Bar Chart"
+                            class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bubble Chart -->
+        <div class="container mt-4">
+            <div class="chart-container">
+                <img src="static/images/bubble_chart.png" alt="Bubble Chart">
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="container mt-4">
+            <h2>Distribution of Countries Visited</h2>
+            <div class="card">
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='images/pie_chart.png') }}" alt="Pie Chart" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include app.js -->
+    <script src="static/js/app.js"></script>
+</body>
+
+</html>
