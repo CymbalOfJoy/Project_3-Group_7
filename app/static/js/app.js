@@ -1,14 +1,4 @@
 // Use D3 to select the table
-
-// Use D3 to create a bootstrap striped table
-// https://getbootstrap.com/docs/5.3/content/tables/#striped-rows
-
-// Use D3 to select the table body
-
-// BONUS: Dynamic table
-// Loop through an array of grades and build the entire table body from scratch
-
-// Use D3 to select the table
 let table = d3.select("#table_data");
 let tbody = table.select("tbody");
 
@@ -28,22 +18,28 @@ function doWork() {
   // Fetch the JSON data and console log it
 
   // get value
-  let Country_Visited = d3.select("#Country_Visited").property("value"); // user input
-  let url1 = `/api/v1.0/bar_data/${Country_Visited}`;
-  let url2 = `/api/v1.0/table_data/${Coun}`
-
-  // Make Request
+  let Country_Visited = d3.select("#countryInput").property("value"); // user input
+  console.log(Country_Visited)
+  let url1 = `/api/v1.0/bar_data/`;
+  let url2 = `/api/v1.0/table_data/${Country_Visited}`;
   d3.json(url1).then(function (data) {
     // Make Plot
     makeBarPlot(data);
+  }).catch(function (error) {
+    console.error('Error fetching bar data:', error);
   });
 
-  d3.json(url2).then(function (data) {
-    // Make Table
-    makeTable(data);
-  });
+  // Make Request
+  if (Country_Visited !== "" || Country_Visited !== null) {
+
+    d3.json(url2).then(function (data) {
+      // Make Table
+      makeTable(data);
+    }).catch(function (error) {
+      console.error('Error fetching table data:', error);
+    });
+  }
 }
-
 
 function makeTable(data) {
   // Clear Table
@@ -51,26 +47,20 @@ function makeTable(data) {
   dt_table.clear().destroy();
 
   // Create Table
-  for (let i = 0; i < data.length; i++) {
-    let row = data[i];
-
-    // Create Table Row
+  data.forEach((row) => {
     let table_row = tbody.append("tr");
-
-    // Append Cells
     table_row.append("td").text(row.Country_Visited);
     table_row.append("td").text(row.Travel_Duration_Days);
     table_row.append("td").text(row.Number_of_Companions);
     table_row.append("td").text(row.Latitude);
     table_row.append("td").text(row.Longitude);
-  }
+  });
 
   // Make Table Interactive (again)
   dt_table = new DataTable('#table_data', {
     order: [[0, 'desc']] // Sort by column 1 desc
   });
 }
-
 
 function makeBarPlot(data) {
   // Create Trace
@@ -107,3 +97,5 @@ function makeBarPlot(data) {
   // Render the plot to the div tag with id "plot"
   Plotly.newPlot('plot', traces, layout);
 }
+
+
