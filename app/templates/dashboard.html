@@ -70,9 +70,9 @@
                     <table id="table_data" class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Country_Visited</th>
-                                <th>Travel Duration Days</th>
-                                <th>Number of Companions</th>
+                                <th>City Visited</th>
+                                <th>Country Visited</th>
+                                <th>Travel</th>
                                 <th>Accomodation Type</th>
                                 <th>Main Purpose</th>
                                 <th>Season of Visit</th>
@@ -87,10 +87,7 @@
                     <div class="chart-container">
                         <img src="static/images/bubble_chart.png" alt="Bubble Chart">
                     </div>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                </div>
                 <!-- Pie Chart -->
                 <div class="container mt-4">
                   <h2>Distribution of Countries Visited</h2>
@@ -103,35 +100,7 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#filter-btn').click(function() {
-                var country = $('#countryInput').val();
-                $.ajax({
-                    url: "/api/v1.0/filter_data",
-                    type: "GET",
-                    data: { country: country },
-                    success: function(data) {
-                        var table = $('#table_data').DataTable();
-                        table.clear();
-                        data.forEach(function(row) {
-                            table.row.add([
-                                row.Country_Visited,
-                                row.Travel_Duration_Days,
-                                row.Number_of_Companions,
-                                row.Accommodation_Type,
-                                row.Main_Purpose,
-                                row.Season_of_Visit
-                            ]).draw();
-                        });
-                    }
-                });
-            });
-
-            $('#table_data').DataTable();
-        });
-    </script>
+    <script src="static/js/app.js"></script>
 </body>
 
 </html>
