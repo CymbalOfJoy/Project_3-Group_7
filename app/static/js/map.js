@@ -16,7 +16,7 @@ function createMap(min_year) {
   });
 
   // Assemble the API query URL.
-  let url = `/api/v1.0/map_data/${min_year}`;
+  let url = `/api/v1.0/map_data/`;
   console.log(url);
 
   d3.json(url).then(function (data) {
@@ -31,7 +31,7 @@ function createMap(min_year) {
     for (let i = 0; i < data.length; i++){
       let row = data[i];
 
-      let marker = L.marker([row.latitude, row.longitude]).bindPopup(`<h1>${row.magnitude}</h1><h3>${row.year}</h3><h4>${row.type}</h4>`);
+      let marker = L.marker([row.lat, row.long]).bindPopup(`<h1>${row.City_Visited}</h1><h3>${row.min_cv}</h3><h4>${row.sum_nc}</h4>`);
       markers.addLayer(marker);
 
       // Heatmap point
@@ -57,8 +57,8 @@ function createMap(min_year) {
 
     // Step 4: INITIALIZE THE MAP
     let myMap = L.map("map", {
-      center: [40.7128, -74.0059],
-      zoom: 7,
+      center: [47.8014, 13.0448],
+      zoom: 5,
       layers: [street, markers]
     });
 
@@ -68,8 +68,8 @@ function createMap(min_year) {
 }
 
 function init() {
-  let min_year = d3.select("#min-year").property("value");
-  createMap(min_year);
+  let City_Visited = d3.select("#City_Visited").property("value");
+  createMap(City_Visited);
 }
 
 // Event Listener

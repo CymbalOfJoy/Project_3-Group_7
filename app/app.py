@@ -67,9 +67,18 @@ def pie_data():
     df = sql_helper.query_pie_data()
     # Turn DataFrame into List of Dictionary
     data = df.to_dict(orient="records")
+    
+    # # Create a pie chart for the 'Country_Visited' column
+    # plt.figure(figsize=(10, 7))
+    # df.set_index('Country_Visited')['Count'].plot.pie(autopct='%1.1f%%', startangle=140, cmap='viridis')
+    # plt.title('Precentage of Visitors to Each Country')
+    # plt.ylabel('')  # This removes the y-label
+    # plt.savefig('static/pie_chart.png')
+    # plt.tight_layout()
+    # plt.show()  
 
     # Return the JSON data
-    return jsonify(data)
+    return jsonify(data) 
 
 @app.route("/api/v1.0/map_data/")
 def map_data():
@@ -96,4 +105,5 @@ def add_header(r):
     return r
 
 if __name__ == "__main__":
+    print("starting app")
     app.run(debug=True)

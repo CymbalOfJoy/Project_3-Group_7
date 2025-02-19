@@ -49,11 +49,13 @@ function makeTable(data) {
   // Create Table
   data.forEach((row) => {
     let table_row = tbody.append("tr");
+    table_row.append("td").text(row.City_Visited);
     table_row.append("td").text(row.Country_Visited);
     table_row.append("td").text(row.Travel_Duration_Days);
-    table_row.append("td").text(row.Number_of_Companions);
-    table_row.append("td").text(row.Latitude);
-    table_row.append("td").text(row.Longitude);
+    table_row.append("td").text(row.Accommodation_Type);
+    table_row.append("td").text(row.Main_Purpose);
+    table_row.append("td").text(row.Season_of_Visit);
+
   });
 
   // Make Table Interactive (again)
