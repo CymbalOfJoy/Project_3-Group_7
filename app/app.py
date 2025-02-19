@@ -5,15 +5,11 @@ import numpy as np
 from flask import Flask, jsonify, render_template, redirect, request
 from SQLHelper import SQLHelper
 
-
-
 app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # remove caching
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # remove caching
 
-# SQL Helper
 # SQL Helper
 sql_helper = SQLHelper()
-
 
 #################################################
 # Flask STATIC Routes
@@ -59,17 +55,11 @@ def bar_data():
     data = df1.to_dict(orient="records")
     return jsonify(data)
 
-
-
-@app.route("/api/v1.0/table_data")
-def filter_data():
-    country = request.args.get('Country_Visited')
-    if not country:
-        return jsonify([])  # Return an empty list if no country is provided
-    df = sql_helper.query_filtered_data(country)
+@app.route("/api/v1.0/table_data/<Country_Visited>")
+def filter_data(Country_Visited):
+    df = sql_helper.query_table_data(Country_Visited)
     data = df.to_dict(orient="records")
     return jsonify(data)
-
 
 @app.route("/api/v1.0/pie_data/")
 def pie_data():
@@ -77,18 +67,9 @@ def pie_data():
     df = sql_helper.query_pie_data()
     # Turn DataFrame into List of Dictionary
     data = df.to_dict(orient="records")
-    
-    # Create a pie chart for the 'Country_Visited' column
-    plt.figure(figsize=(10, 7))
-    df.set_index('Country_Visited')['Count'].plot.pie(autopct='%1.1f%%', startangle=140, cmap='viridis')
-    plt.title('Precentage of Visitors to Each Country')
-    plt.ylabel('')  # This removes the y-label
-    plt.savefig('static/pie_chart.png')
-    
+
     # Return the JSON data
     return jsonify(data)
-plt.tight_layout()
-plt.show()  
 
 @app.route("/api/v1.0/map_data/")
 def map_data():
@@ -97,7 +78,6 @@ def map_data():
     # Turn DataFrame into List of Dictionary
     data = df.to_dict(orient="records")
     return jsonify(data)
-
 
 #################################################
 # ELIMINATE CACHING
@@ -114,6 +94,6 @@ def add_header(r):
     r.headers["Pragma"] = "no-cache"
     r.headers["Expires"] = "0"
     return r
-#main
+
 if __name__ == "__main__":
     app.run(debug=True)
