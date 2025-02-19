@@ -90,4 +90,13 @@ class SQLHelper:
         """)
         df3 = pd.read_sql(query, con=conn)
         return df3
-        
+    
+    def query_map_data(self):
+        conn = self.engine.connect()
+        query = text("""
+        SELECT City_Visited, lat, long, MIN(Country_Visited) as min_cv, SUM(Number_of_Companions) as sum_nc
+        FROM touristtravel         
+        GROUP BY City_Visited         
+        """)
+        df3 = pd.read_sql(query, con=conn)
+        return df3
