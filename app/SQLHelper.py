@@ -72,7 +72,7 @@ class SQLHelper:
 
         return df3
 
-    def pie_data(self):
+    def query_pie_data(self):
         conn = self.engine.connect()
         query = text("""
         SELECT

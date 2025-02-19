@@ -30,7 +30,7 @@ function doWork() {
   });
 
   // Make Request
-  if (Country_Visited !== "" || Country_Visited !== null) {
+    if (Country_Visited && Country_Visited !== "") {
 
     d3.json(url2).then(function (data) {
       // Make Table
