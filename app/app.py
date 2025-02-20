@@ -1,7 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 from flask import Flask, jsonify, render_template, redirect, request
 from SQLHelper import SQLHelper
 
