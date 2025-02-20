@@ -1,10 +1,5 @@
 from sqlalchemy import create_engine, text
 import pandas as pd
-import numpy as np
-# Plotting
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.graph_objects as go
 
 import os
 
